@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace IdentityServer.AuthServer
 {
@@ -19,6 +20,8 @@ namespace IdentityServer.AuthServer
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddTestUsers(Config.GetUsers().ToList())
                 .AddDeveloperSigningCredential();
 
             services.AddControllersWithViews();
@@ -41,6 +44,8 @@ namespace IdentityServer.AuthServer
             app.UseRouting();
 
             app.UseIdentityServer();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

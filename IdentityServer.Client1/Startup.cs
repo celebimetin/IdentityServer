@@ -24,12 +24,11 @@ namespace IdentityServer.Client1
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "Oidc";
+                options.DefaultChallengeScheme = "oidc";
             }).AddCookie("Cookies", options =>
             {
                 options.AccessDeniedPath = "/Home/AccessDenied";
-                options.LogoutPath = "/Home/Index";
-            }).AddOpenIdConnect("Oidc", options =>
+            }).AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookies";
                 options.Authority = "https://localhost:5001";

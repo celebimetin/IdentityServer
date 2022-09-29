@@ -45,7 +45,8 @@ namespace IdentityServer.Client2
                 options.ClaimActions.MapUniqueJsonKey("role", "role");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    RoleClaimType = "role"
+                    RoleClaimType = "role",
+                    NameClaimType = "name"
                 };
             });
 

@@ -28,12 +28,12 @@ namespace IdentityServer.AuthServer
             });
 
             services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 //.AddTestUsers(Config.GetUsers().ToList())
-                .AddDeveloperSigningCredential()
                 .AddProfileService<CustomProfileService>();
 
             services.AddControllersWithViews();

@@ -26,7 +26,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_module/oidc-client/dist/oidc-client.min.js"
+              "node_modules/oidc-client/dist/oidc-client.min.js"
             ]
           },
           "configurations": {

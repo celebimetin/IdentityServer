@@ -1,5 +1,9 @@
+using IdentityServer.AuthServer.Models;
+using IdentityServer.AuthServer.Repository;
+using IdentityServer.AuthServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,13 +20,21 @@ namespace IdentityServer.AuthServer
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICustomUserRepository, CustomUserRepository>();
+
+            services.AddDbContext<CustomDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
+            });
+
             services.AddIdentityServer()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddTestUsers(Config.GetUsers().ToList())
-                .AddDeveloperSigningCredential();
+                //.AddTestUsers(Config.GetUsers().ToList())
+                .AddDeveloperSigningCredential()
+                .AddProfileService<CustomProfileService>();
 
             services.AddControllersWithViews();
         }

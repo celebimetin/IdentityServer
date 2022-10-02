@@ -1,5 +1,6 @@
 ﻿using IdentityModel.Client;
 using IdentityServer.Client1.Models;
+using IdentityServer.Client1.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,17 @@ namespace IdentityServer.Client1.Controllers
     public class LoginController : Controller
     {
         private readonly IConfiguration _configuration;
-        public LoginController(IConfiguration configuration)
+        private readonly IApiResourceHttpClient _apiResourceHttpClient;
+        public LoginController(IConfiguration configuration, IApiResourceHttpClient apiResourceHttpClient)
         {
             _configuration = configuration;
+            _apiResourceHttpClient = apiResourceHttpClient;
         }
         public IActionResult Index()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel loginViewModel)
         {
@@ -33,17 +37,17 @@ namespace IdentityServer.Client1.Controllers
             if (disco.IsError) { throw new Exception(disco.Error); }
 
             var passwordTokenRequest = new PasswordTokenRequest();
+            passwordTokenRequest.ClientId = _configuration["ClientResourceOwnerMvc:ClientId"];
+            passwordTokenRequest.ClientSecret = _configuration["ClientResourceOwnerMvc:ClientSecret"];
             passwordTokenRequest.Address = disco.TokenEndpoint;
             passwordTokenRequest.UserName = loginViewModel.Email;
             passwordTokenRequest.Password = loginViewModel.Password;
-            passwordTokenRequest.ClientId = _configuration["ClientResourceOwnerMvc:ClientId"];
-            passwordTokenRequest.ClientSecret = _configuration["ClientResourceOwnerMvc:ClientSecret"];
 
             var token = await client.RequestPasswordTokenAsync(passwordTokenRequest);
-            if (token.IsError) 
+            if (token.IsError)
             {
                 ModelState.AddModelError("", "");
-                throw new Exception(token.Error); 
+                throw new Exception(token.Error);
             }
 
             var userInfoRequest = new UserInfoRequest();
@@ -65,7 +69,26 @@ namespace IdentityServer.Client1.Controllers
             });
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index", "Users");
+        }
+
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignUpViewModel signUpViewModel)
+        {
+            if (!ModelState.IsValid) return View(signUpViewModel);
+
+            var result = await _apiResourceHttpClient.UserSignUpViewModel(signUpViewModel);
+            if (result != null)
+            {
+                result.ForEach(error => { ModelState.AddModelError("", error); });
+                return View();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

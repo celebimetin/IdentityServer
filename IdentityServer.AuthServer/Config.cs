@@ -67,7 +67,16 @@ namespace IdentityServer.AuthServer
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     RedirectUris = new List<string>{ "https://localhost:5003/signin-oidc" },
                     PostLogoutRedirectUris = new List<string>{"https://localhost:5003/signout-callback-oidc"},
-                    AllowedScopes = { IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read", IdentityServerConstants.StandardScopes.OfflineAccess, "CountryAndCity", "Roles" },
+                    AllowedScopes = 
+                    { 
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "api1.read",  
+                        "CountryAndCity", 
+                        "Roles" 
+                    },
                     AccessTokenLifetime = (int)(DateTime.Now.AddHours(2) - DateTime.Now).TotalSeconds,
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.ReUse,
@@ -84,14 +93,66 @@ namespace IdentityServer.AuthServer
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     RedirectUris = new List<string>{ "https://localhost:5005/signin-oidc" },
                     PostLogoutRedirectUris = new List<string>{"https://localhost:5005/signout-callback-oidc"},
-                    AllowedScopes = { IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read", IdentityServerConstants.StandardScopes.OfflineAccess, "CountryAndCity", "Roles" },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "api1.read",
+                        "CountryAndCity",
+                        "Roles"
+                    },
                     AccessTokenLifetime = (int)(DateTime.Now.AddHours(2) - DateTime.Now).TotalSeconds,
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.ReUse,
                     RefreshTokenExpiration = TokenExpiration.Absolute,
                     AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddHours(60) - DateTime.Now).TotalSeconds,
                     RequireConsent = false
-                }
+                },
+                new Client()
+                {
+                    ClientId = "js-client",
+                    RequireClientSecret = false,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientName = "Js Client(Angular)",
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "api1.read",
+                        "CountryAndCity",
+                        "Roles"
+                    },
+                    RedirectUris = {"http://localhost:4200/callback"},
+                    AllowedCorsOrigins = {"http://localhost:4200"},
+                    PostLogoutRedirectUris = {"http://localhost:4200"}
+                },
+                new Client()
+                {
+                    ClientId = "Client1-ResourceOwner-Mvc",
+                    RequirePkce = false,
+                    ClientName = "Client1-ResourceOwner-Mvc",
+                    ClientSecrets = new []{new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedScopes = 
+                    { 
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "api1.read",  
+                        "CountryAndCity", 
+                        "Roles" 
+                    },
+                    AccessTokenLifetime = (int)(DateTime.Now.AddHours(2) - DateTime.Now).TotalSeconds,
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
+                    RefreshTokenExpiration = TokenExpiration.Absolute,
+                    AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddHours(60) - DateTime.Now).TotalSeconds,
+                },
             };
         }
         public static IEnumerable<IdentityResource> GetIdentityResources()

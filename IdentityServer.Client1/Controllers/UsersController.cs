@@ -26,15 +26,16 @@ namespace IdentityServer.Client1.Controllers
         {
             return View();
         }
-        public async Task Logout()
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("Cookies");
-            await HttpContext.SignOutAsync("oidc");
+            //await HttpContext.SignOutAsync("oidc");
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> GetRefreshToken()
         {
             HttpClient httpClient = new HttpClient();
-            var disco = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
+            var disco = await httpClient.GetDiscoveryDocumentAsync(_configuration["authServerUrl"]);
             if (disco.IsError) { }
 
             var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);

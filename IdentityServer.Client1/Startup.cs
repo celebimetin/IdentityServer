@@ -24,33 +24,35 @@ namespace IdentityServer.Client1
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
+                //options.DefaultChallengeScheme = "oidc";
             }).AddCookie("Cookies", options =>
             {
+                options.LoginPath = "/Login/Index";
                 options.AccessDeniedPath = "/Home/AccessDenied";
-            }).AddOpenIdConnect("oidc", options =>
-            {
-                options.SignInScheme = "Cookies";
-                options.Authority = "https://localhost:5001";
-                options.ClientId = "Client1-Mvc";
-                options.ClientSecret = "secret";
-                options.ResponseType = "code id_token";
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.RequireHttpsMetadata = true;
-                options.SaveTokens = true;
-                options.Scope.Add("api1.read");
-                options.Scope.Add("offline_access");
-                options.Scope.Add("CountryAndCity");
-                options.ClaimActions.MapUniqueJsonKey("country", "country");
-                options.ClaimActions.MapUniqueJsonKey("city", "city");
-                options.Scope.Add("Roles");
-                options.ClaimActions.MapUniqueJsonKey("role", "role");
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    RoleClaimType = "role",
-                    NameClaimType = "name"
-                };
             });
+            //.AddOpenIdConnect("oidc", options =>
+            //{
+            //    options.SignInScheme = "Cookies";
+            //    options.Authority = "https://localhost:5001";
+            //    options.ClientId = "Client1-Mvc";
+            //    options.ClientSecret = "secret";
+            //    options.ResponseType = "code id_token";
+            //    options.GetClaimsFromUserInfoEndpoint = true;
+            //    options.RequireHttpsMetadata = true;
+            //    options.SaveTokens = true;
+            //    options.Scope.Add("api1.read");
+            //    options.Scope.Add("offline_access");
+            //    options.Scope.Add("CountryAndCity");
+            //    options.ClaimActions.MapUniqueJsonKey("country", "country");
+            //    options.ClaimActions.MapUniqueJsonKey("city", "city");
+            //    options.Scope.Add("Roles");
+            //    options.ClaimActions.MapUniqueJsonKey("role", "role");
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        RoleClaimType = "role",
+            //        NameClaimType = "name"
+            //    };
+            //});
 
             services.AddControllersWithViews();
         }

@@ -27,14 +27,15 @@ namespace IdentityServer.AuthServer
                 options.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
             });
 
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+            services.AddIdentityServer()  
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 //.AddTestUsers(Config.GetUsers().ToList())
-                .AddProfileService<CustomProfileService>();
+                .AddDeveloperSigningCredential()
+                .AddProfileService<CustomProfileService>()
+                .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>();
 
             services.AddControllersWithViews();
         }

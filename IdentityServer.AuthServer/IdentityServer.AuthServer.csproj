@@ -6,9 +6,13 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\**" />
+    <Compile Remove="Migrations\**" />
     <Content Remove="Controllers\**" />
+    <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Controllers\**" />
+    <None Remove="Migrations\**" />
   </ItemGroup>
 
   <ItemGroup>

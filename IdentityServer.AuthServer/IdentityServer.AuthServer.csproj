@@ -16,6 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Migrations\20221002130149_Initial.cs" />
+    <Compile Include="Migrations\20221002130149_Initial.Designer.cs" />
+    <Compile Include="Migrations\ConfigurationDb\20221002130305_Initial.cs" />
+    <Compile Include="Migrations\ConfigurationDb\20221002130305_Initial.Designer.cs" />
+    <Compile Include="Migrations\ConfigurationDb\ConfigurationDbContextModelSnapshot.cs" />
+    <Compile Include="Migrations\CustomDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />

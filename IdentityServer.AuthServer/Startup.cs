@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using System.Reflection;
 
 namespace IdentityServer.AuthServer
 {
@@ -27,11 +28,33 @@ namespace IdentityServer.AuthServer
                 options.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
             });
 
-            services.AddIdentityServer()  
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryApiScopes(Config.GetApiScopes())
-                .AddInMemoryClients(Config.GetClients())
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+            var assmeblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddIdentityServer()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = c =>
+                    {
+                        c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlOptions =>
+                        {
+                            sqlOptions.MigrationsAssembly(assmeblyName);
+                        });
+                    };
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = c =>
+                    {
+                        c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlOptions =>
+                        {
+                            sqlOptions.MigrationsAssembly(assmeblyName);
+                        });
+                    };
+                })
+                //.AddInMemoryApiResources(Config.GetApiResources())
+                //.AddInMemoryApiScopes(Config.GetApiScopes())
+                //.AddInMemoryClients(Config.GetClients())
+                //.AddInMemoryIdentityResources(Config.GetIdentityResources())
                 //.AddTestUsers(Config.GetUsers().ToList())
                 .AddDeveloperSigningCredential()
                 .AddProfileService<CustomProfileService>()
